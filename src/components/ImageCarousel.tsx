@@ -37,16 +37,16 @@ export const ImageCarousel = ({ images }: ImageCarouselProps) => {
       3: 'left-[60px] z-0',
     };
 
-    return `cursor-pointer absolute w-full aspect-[4/3] hover:translate-y-2 ${position[index as keyof typeof position]}`;
+    return `cursor-pointer absolute w-full ${position[index as keyof typeof position]}`;
   };
 
   return (
     <div className='max-w-7xl mx-auto p-4'>
       {/* Current Photo Section */}
-      <div className='flex'>
+      <div className='flex gap-6'>
         <div className='w-[50rem]'>
           <div className='aspect-[16/9] relative'>
-            <img src={currentImage.src} alt={currentImage.alt} className='w-full h-[32rem] object-cover rounded-lg' />
+            <img src={currentImage.src} alt={currentImage.alt} className='w-full h-[32rem] object-cover rounded-lg shadow-lg' />
           </div>
         </div>
 
@@ -56,13 +56,13 @@ export const ImageCarousel = ({ images }: ImageCarouselProps) => {
           <div className='w-[300px] relative'>
             {nextImages.map((image, index) => (
               <div key={image.id} className={`${getStackedIndex(index)}`} onClick={handleNext}>
-                <img src={image.src} alt={image.alt} className='w-full object-cover rounded-lg shadow-lg' />
+                <img src={image.src} alt={image.alt} className='w-full aspect-[16/9] hover:translate-y-2 object-cover rounded-lg shadow-lg' />
               </div>
             ))}
           </div>
 
           {/* Carousel Buttons */}
-          <div className='flex gap-4'>
+          <div className='flex gap-4 justify-center'>
             <CarouselButton onClick={handlePrevious} disabled={currentIndex === 0}>
               Previous
             </CarouselButton>
