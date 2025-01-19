@@ -1,15 +1,13 @@
 import './App.css';
 import { Button } from './components/ui/button';
-import { ImageCarousel } from './components/imageCarousel';
-import image1 from '@/assets/image1.svg';
-import image2 from '@/assets/image2.svg';
+import { ImageCarousel } from './components/ImageCarousel';
 
 const images = [
-  { id: 1, src: image1, alt: 'Image 1' },
-  { id: 2, src: image2, alt: 'Image 2' },
-  { id: 3, src: image1, alt: 'Image 3' },
-  { id: 4, src: image2, alt: 'Image 4' },
-  { id: 5, src: image1, alt: 'Image 4' },
+  { id: 1, src: 'image1.jpg', alt: 'Image 1' },
+  { id: 2, src: 'image2.jpg', alt: 'Image 2' },
+  { id: 3, src: 'image3.jpg', alt: 'Image 3' },
+  { id: 4, src: 'image4.jpg', alt: 'Image 4' },
+  { id: 5, src: 'image5.jpg', alt: 'Image 5' },
 ];
 
 function App() {

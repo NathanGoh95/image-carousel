@@ -15,7 +15,7 @@ export const ImageCarousel = ({ images }: ImageCarouselProps) => {
   const [currentIndex, setCurrentIndex] = useState(0);
 
   const currentImage = images[currentIndex];
-  const nextImages = images.slice(currentIndex + 1, currentIndex + 4);
+  const nextImages = images.slice(currentIndex + 1, currentIndex + 5);
 
   const handleNext = () => {
     if (currentIndex < images.length - 1) {
@@ -29,34 +29,48 @@ export const ImageCarousel = ({ images }: ImageCarouselProps) => {
     }
   };
 
+  const getStackedIndex = (index: number) => {
+    const position = {
+      0: 'left-0 z-30',
+      1: 'left-[20px] z-20',
+      2: 'left-[40px] z-10',
+      3: 'left-[60px] z-0',
+    };
+
+    return `cursor-pointer absolute w-full ${position[index as keyof typeof position]}`;
+  };
+
   return (
     <div className='max-w-7xl mx-auto p-4'>
       {/* Current Photo Section */}
       <div className='flex gap-6'>
-        <div className='w-[45rem]'>
+        <div className='w-[50rem]'>
           <div className='aspect-[16/9] relative'>
-            <img src={currentImage.src} alt={currentImage.alt} className='w-full h-[500px] object-cover rounded-lg' />
+            <img src={currentImage.src} alt={currentImage.alt} className='w-full h-[32rem] object-cover rounded-lg shadow-lg' />
           </div>
         </div>
 
-        {/* Next Photo Section */}
-        <div className='w-[35rem] flex flex-col gap-4' onClick={handleNext}>
-          {nextImages.map((image) => (
-            <div key={image.id} className='cursor-pointer relative w-full'>
-              <img src={image.src} alt={image.alt} className='h-[9rem] aspect-[3/2] object-cover rounded-lg' />
-            </div>
-          ))}
-        </div>
-      </div>
+        {/* Next Photo & Buttons container */}
+        <div className='flex flex-col justify-around'>
+          {/* Next Photo Section */}
+          <div className='w-[300px] relative'>
+            {nextImages.map((image, index) => (
+              <div key={image.id} className={`${getStackedIndex(index)}`} onClick={handleNext}>
+                <img src={image.src} alt={image.alt} className='w-full aspect-[16/9] hover:translate-y-2 object-cover rounded-lg shadow-lg' />
+              </div>
+            ))}
+          </div>
 
-      {/* Carousel Buttons */}
-      <div className='flex justify-center gap-4 mt-6'>
-        <CarouselButton onClick={handlePrevious} disabled={currentIndex === 0}>
-          Previous
-        </CarouselButton>
-        <CarouselButton onClick={handleNext} disabled={currentIndex === images.length - 1}>
-          Next
-        </CarouselButton>
+          {/* Carousel Buttons */}
+          <div className='flex gap-4 justify-center'>
+            <CarouselButton onClick={handlePrevious} disabled={currentIndex === 0}>
+              Previous
+            </CarouselButton>
+            <CarouselButton onClick={handleNext} disabled={currentIndex === images.length - 1}>
+              Next
+            </CarouselButton>
+          </div>
+        </div>
       </div>
     </div>
   );
