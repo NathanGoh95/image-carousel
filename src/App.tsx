@@ -1,6 +1,8 @@
 import './App.css';
 import { Button } from './components/ui/button';
 import { ImageCarousel } from './components/ImageCarousel';
+import { ThemeProvider } from './components/ThemeProvider';
+import { ThemeSwitch } from './components/ThemeSwitch';
 
 const images = [
   { id: 1, src: 'image1.jpg', alt: 'Image 1' },
@@ -12,12 +14,10 @@ const images = [
 
 function App() {
   return (
-    <>
-      <Button className='bg-slate-400' variant={'secondary'}>
-        Hello
-      </Button>
+    <ThemeProvider defaultTheme='dark' storageKey='vite-ui-theme'>
+      <ThemeSwitch />
       <ImageCarousel images={images} />
-    </>
+    </ThemeProvider>
   );
 }
 
