@@ -12,6 +12,18 @@ type ImageCarouselProps = {
   images: Image[];
 };
 
+const useTimeoutReset = (state: boolean, setState: (value: boolean) => void, delay: number) => {
+  useEffect(() => {
+    if (state) {
+      const timer = setTimeout(() => {
+        setState(false);
+      }, delay);
+
+      return () => clearTimeout(timer);
+    }
+  }, [state, setState, delay]);
+};
+
 export const ImageCarousel = ({ images }: ImageCarouselProps) => {
   const [currentIndex, setCurrentIndex] = useState(0);
   const [zoomCurrent, setZoomCurrent] = useState(false);
@@ -43,28 +55,10 @@ export const ImageCarousel = ({ images }: ImageCarouselProps) => {
     }
   };
 
-  useEffect(() => {
-    if (zoomCurrent) {
-      const timer = setTimeout(() => {
-        setLoading(false);
-        setZoomCurrent(false);
-        setIsPulling(false);
-      }, 50);
-
-      return () => clearTimeout(timer);
-    }
-  }, [zoomCurrent]);
-
-  // Reset pushing state
-  useEffect(() => {
-    if (isPushing) {
-      const timer = setTimeout(() => {
-        setIsPushing(false);
-      }, 100);
-
-      return () => clearTimeout(timer);
-    }
-  });
+  useTimeoutReset(zoomCurrent, setLoading, 50);
+  useTimeoutReset(zoomCurrent, setZoomCurrent, 50);
+  useTimeoutReset(zoomCurrent, setIsPulling, 50);
+  useTimeoutReset(isPushing, setIsPushing, 100);
 
   const getStackedIndex = (index: number) => {
     const position = {
@@ -88,7 +82,12 @@ export const ImageCarousel = ({ images }: ImageCarouselProps) => {
           transition={{ type: 'keyframe', stiffness: 50 }}>
           <div className='aspect-[7/5] relative'>
             {!laoding && (
-              <img src={currentImage.src} alt={currentImage.alt} className='w-full h-full rounded-lg shadow-lg' />
+              <img
+                src={currentImage.src}
+                alt={currentImage.alt}
+                className='w-full h-full rounded-lg shadow-lg'
+                loading='lazy'
+              />
             )}
           </div>
         </motion.div>
@@ -98,11 +97,11 @@ export const ImageCarousel = ({ images }: ImageCarouselProps) => {
           {/* Next Photo Section */}
           <motion.div
             className='w-[300px] relative'
-            animate={isPushing ? { x: 20 } : { x: 0 }}
+            animate={isPushing ? { x: 40 } : { x: 0 }}
             transition={{ type: 'spring', stiffness: 100 }}>
             {nextImages.map((image, index) => (
               <motion.div
-                key={`${image.id}-${currentIndex}`}
+                key={image.id}
                 className={`${getStackedIndex(index)}`}
                 onClick={handleNext}
                 whileHover={{ y: -20 }}
@@ -112,7 +111,7 @@ export const ImageCarousel = ({ images }: ImageCarouselProps) => {
                   src={image.src}
                   alt={image.alt}
                   loading='lazy'
-                  className='w-full aspect-[16/9] rounded-lg shadow-lg'
+                  className='w-full aspect-[16/9] rounded-lg shadow-lg object-cover'
                 />
               </motion.div>
             ))}
