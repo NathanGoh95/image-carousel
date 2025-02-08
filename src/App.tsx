@@ -1,8 +1,9 @@
 import './App.css';
 import { ImageCarousel } from './components/ImageCarousel';
+import { LoopSwitch } from './components/LoopSwitch';
 import { ThemeProvider } from './components/ThemeProvider';
 import { ThemeSwitch } from './components/ThemeSwitch';
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 
 const images = [
   { id: 1, src: 'image1.jpg', alt: 'Image 1' },
@@ -12,22 +13,21 @@ const images = [
   { id: 5, src: 'image5.jpg', alt: 'Image 5' },
 ];
 
-const preloadImages = (imageArray: { src: string }[]) => {
-  imageArray.forEach((image) => {
-    const img = new Image();
-    img.src = image.src;
-  });
-};
-
 function App() {
-  useEffect(() => {
-    preloadImages(images);
-  }, []);
+  const [isLooping, setIsLooping] = useState(() => {
+    const storedLooping = sessionStorage.getItem('isLooping');
+    return storedLooping === 'true';
+  });
+
+  const handleToggleLopping = (looping: boolean) => {
+    setIsLooping(looping);
+  };
 
   return (
     <ThemeProvider defaultTheme='dark' storageKey='vite-ui-theme'>
       <ThemeSwitch />
-      <ImageCarousel images={images} />
+      <LoopSwitch onToggle={handleToggleLopping} />
+      <ImageCarousel images={images} loop={isLooping} />
     </ThemeProvider>
   );
 }
