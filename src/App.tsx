@@ -1,8 +1,10 @@
 import './App.css';
 import { ImageCarousel } from './components/ImageCarousel';
+import { LoopSwitch } from './components/LoopSwitch';
 import { ThemeProvider } from './components/ThemeProvider';
 import { ThemeSwitch } from './components/ThemeSwitch';
-import { useEffect } from 'react';
+import { useState } from 'react';
+import { cn } from './lib/utils';
 
 const images = [
   { id: 1, src: 'image1.jpg', alt: 'Image 1' },
@@ -12,22 +14,30 @@ const images = [
   { id: 5, src: 'image5.jpg', alt: 'Image 5' },
 ];
 
-const preloadImages = (imageArray: { src: string }[]) => {
-  imageArray.forEach((image) => {
-    const img = new Image();
-    img.src = image.src;
-  });
-};
-
 function App() {
-  useEffect(() => {
-    preloadImages(images);
-  }, []);
+  const [isLooping, setIsLooping] = useState(() => {
+    const storedLooping = sessionStorage.getItem('isLooping');
+    return storedLooping === 'true';
+  });
+
+  const handleToggleLopping = (looping: boolean) => {
+    setIsLooping(looping);
+  };
 
   return (
     <ThemeProvider defaultTheme='dark' storageKey='vite-ui-theme'>
-      <ThemeSwitch />
-      <ImageCarousel images={images} />
+      <div className='flex gap-4 justify-center'>
+        <ThemeSwitch />
+        <LoopSwitch
+          className={cn(
+            isLooping
+              ? 'bg-zinc-50 hover:bg-zinc-800 hover:text-zinc-50 text-zinc-900 dark:text-zinc-50 shadow-lg shadow-gray-950/50 dark:bg-zinc-900 dark:hover:bg-zinc-100 dark:hover:text-zinc-900 dark:shadow-gray-100/50'
+              : '',
+          )}
+          onToggle={handleToggleLopping}
+        />
+      </div>
+      <ImageCarousel images={images} loop={isLooping} />
     </ThemeProvider>
   );
 }
