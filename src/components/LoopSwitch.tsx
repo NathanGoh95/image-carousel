@@ -1,8 +1,15 @@
 import { useState } from 'react';
 import { Button } from './ui/button';
 import { Infinity } from 'lucide-react';
+import { cn } from '@/lib/utils';
+import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from './ui/tooltip';
 
-export const LoopSwitch = ({ onToggle }) => {
+type LoopSwitchProps = {
+  onToggle: (looping: boolean) => void;
+  className?: string;
+};
+
+export const LoopSwitch = ({ onToggle, className }: LoopSwitchProps) => {
   const [isLooping, setIsLooping] = useState(() => {
     const storedLooping = sessionStorage.getItem('isLooping');
     return storedLooping === 'true';
@@ -16,13 +23,22 @@ export const LoopSwitch = ({ onToggle }) => {
   };
 
   return (
-    <Button
-      variant={'outline'}
-      size={'icon'}
-      aria-label='Toggle Loop'
-      className='p-2 rounded-md transition-colors'
-      onClick={toggleLooping}>
-      <Infinity />
-    </Button>
+    <TooltipProvider delayDuration={100}>
+      <Tooltip>
+        <TooltipTrigger className='p-0'>
+          <Button
+            variant={'outline'}
+            size={'icon'}
+            aria-label='Toggle Loop'
+            className={cn('p-2 border-none ring-0 rounded-md transition-colors', className)}
+            onClick={toggleLooping}>
+            <Infinity />
+          </Button>
+        </TooltipTrigger>
+        <TooltipContent sideOffset={10}>
+          {isLooping ? 'Looping enabled' : 'Looping disabled'}
+        </TooltipContent>
+      </Tooltip>
+    </TooltipProvider>
   );
 };

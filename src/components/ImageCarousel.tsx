@@ -132,7 +132,7 @@ export const ImageCarousel = ({ images, loop }: ImageCarouselProps) => {
             {nextImages.map((image, index) => (
               <motion.div
                 key={image.id}
-                className={`${getStackedIndex(index)}`}
+                className={`${getStackedIndex(index)} shadow-glow-dark dark:shadow-glow-light`}
                 onClick={handleNext}
                 whileHover={{ y: -20 }}
                 animate={index === 0 && isPulling ? { x: -100 } : { x: 0 }}
